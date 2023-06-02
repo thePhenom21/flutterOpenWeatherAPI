@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'env.dart';
 import 'package:http/http.dart' as http;
+import 'weather.dart';
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -71,9 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 Uri url = Uri.parse(
                     "https://api.openweathermap.org/data/2.5/weather?lat=${latController.text}&lon=${lonController.text}&appid=$api_key");
                 var response = await http.get(url);
-                print(response.statusCode);
+                Map<String, dynamic> str = jsonDecode(response.body);
+                Weather wt = Weather(str['weather'][0]['description']);
                 setState(() {
-                  weather = response.body;
+                  weather = wt.weather;
                 });
               },
               child: Text("Get Data"))
